@@ -1,3 +1,13 @@
+// Para probar la gestión de mensajes en salas de chat
+// Conectarse a 3 sesiones de navegador
+// http://localhost:3000/chat.html?nombre=Jose%20Manuel&sala=Juegos
+// http://localhost:3000/chat.html?nombre=Adriana&sala=Juegos
+// http://localhost:3000/chat.html?nombre=Ferney&sala=Amigos
+// Entre José Manuel y Adriana deben aparecer mensajes de conexión y desconexión porque
+// están en la misma sala.
+// Ferney no tiene mensajes de conexión/desconexión de los demás usuarios porque esta
+// en una sala distinta.
+
 const { io } = require('../server');
 const { Usuarios } = require('../classes/usuarios');
 const { crearMensaje } = require('../utilidades/utilidades');
@@ -6,8 +16,6 @@ const usuarios = new Usuarios();
 
 io.on('connection', client => {
   client.on('entrarChat', (data, callback) => {
-    console.log(data);
-
     if (!data.nombre || !data.sala) {
       return callback({
         error: true,
@@ -19,12 +27,14 @@ io.on('connection', client => {
     // el id como nombre
     client.join(data.sala);
 
-    const personas = usuarios.agregarPersona(client.id, data.nombre, data.sala);
+    usuarios.agregarPersona(client.id, data.nombre, data.sala);
 
-    // Indicar a todas las personas que el usuario se ha conectado
-    client.broadcast.emit('listaPersonas', usuarios.getPersonas());
+    // Se filtra a las personas de la sala el mensaje de que un usuario se ha conectado
+    client.broadcast
+      .to(data.sala)
+      .emit('listaPersonas', usuarios.getPersonasPorSala(data.sala));
 
-    callback(personas);
+    callback(usuarios.getPersonasPorSala(data.sala));
   });
 
   client.on('crearMensaje', data => {
@@ -33,19 +43,23 @@ io.on('connection', client => {
     const mensaje = crearMensaje(persona.nombre, data.mensaje);
 
     // Mandar mensajes a todos
-    client.broadcast.emit('crearMensaje', mensaje);
+    client.broadcast.to(persona.sala).emit('crearMensaje', mensaje);
   });
 
   client.on('disconnect', () => {
     const personaBorrada = usuarios.borrarPersona(client.id);
 
-    // Indicar a todos las personas del chat que el usuario se ha desconectado
-    client.broadcast.emit(
-      'crearMensaje',
-      crearMensaje('Administrador', `${personaBorrada.nombre} salió`)
-    );
+    // Indicar a las personas de nuestra sala que el usuario se ha desconectado
+    client.broadcast
+      .to(personaBorrada.sala)
+      .emit(
+        'crearMensaje',
+        crearMensaje('Administrador', `${personaBorrada.nombre} salió`)
+      );
 
-    client.broadcast.emit('listaPersonas', usuarios.getPersonas());
+    client.broadcast
+      .to(personaBorrada.sala)
+      .emit('listaPersonas', usuarios.getPersonasPorSala(personaBorrada.sala));
   });
 
   // Mensajes privados
