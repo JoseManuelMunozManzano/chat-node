@@ -48,4 +48,25 @@ io.on('connection', client => {
 
     client.broadcast.emit('listaPersonas', usuarios.getPersonas());
   });
+
+  // Mensajes privados
+  // data debe contener el id de la persona a la que le quiero enviar el mensaje
+  client.on('mensajePrivado', data => {
+    const persona = usuarios.getPersona(client.id);
+
+    // Habría que validar que data venga bien informada
+
+    // Enviando el mensaje privado al id de usuario deseado
+    // Para probar esto, abrir tres sesiones de navegador e ir a las direcciones siguientes:
+    // http://localhost:3000/chat.html?nombre=Jose%20Manuel
+    // http://localhost:3000/chat.html?nombre=Adriana
+    // http://localhost:3000/chat.html?nombre=Ferney
+    // Abrir las 3 consolas, coger el id de Ferney de la consola de Ferney y en la
+    // consola del navegador José Manuel escribir:
+    // socket.emit('mensajePrivado', {para: "CSyhw0lzbweJRDiWAAAD", mensaje:'Hola Ferney'});
+    // Deberá verse en el navegador donde el usuario es Ferney
+    client.broadcast
+      .to(data.para)
+      .emit('mensajePrivado', crearMensaje(persona.nombre, data.mensaje));
+  });
 });

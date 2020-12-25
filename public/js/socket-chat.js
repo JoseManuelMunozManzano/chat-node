@@ -48,3 +48,9 @@ socket.on('crearMensaje', function (mensaje) {
 socket.on('listaPersonas', function (personas) {
   console.log(personas);
 });
+
+// Mensajes privados
+// Acción de escuchar del cliente
+socket.on('mensajePrivado', function (mensaje) {
+  console.log('Mensaje Privado:', mensaje);
+});
