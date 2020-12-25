@@ -1,13 +1,3 @@
-// Para probar la gestión de mensajes en salas de chat
-// Conectarse a 3 sesiones de navegador
-// http://localhost:3000/chat.html?nombre=Jose%20Manuel&sala=Juegos
-// http://localhost:3000/chat.html?nombre=Adriana&sala=Juegos
-// http://localhost:3000/chat.html?nombre=Ferney&sala=Amigos
-// Entre José Manuel y Adriana deben aparecer mensajes de conexión y desconexión porque
-// están en la misma sala.
-// Ferney no tiene mensajes de conexión/desconexión de los demás usuarios porque esta
-// en una sala distinta.
-
 const { io } = require('../server');
 const { Usuarios } = require('../classes/usuarios');
 const { crearMensaje } = require('../utilidades/utilidades');
