@@ -2,15 +2,14 @@
 // usuario que se conecta a la aplicación
 //
 // En esta clase, cada usuario será un objeto con id, nombre y la sala de chat donde esté
-// Por ahora se trabaja sólo con el id y el nombre
 
 class Usuarios {
   constructor() {
     this.personas = [];
   }
 
-  agregarPersona(id, nombre) {
-    const persona = { id, nombre };
+  agregarPersona(id, nombre, sala) {
+    const persona = { id, nombre, sala };
 
     this.personas.push(persona);
 
