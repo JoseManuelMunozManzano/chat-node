@@ -26,18 +26,19 @@ socket.on('disconnect', function () {
 });
 
 // Enviar información
-socket.emit(
-  'enviarMensaje',
-  {
-    usuario: 'José Manuel',
-    mensaje: 'Hola Mundo',
-  },
-  function (resp) {
-    console.log('respuesta server: ', resp);
-  }
-);
+// socket.emit(
+//   'crearMensaje',
+//   {
+//     nombre: 'José Manuel',
+//     mensaje: 'Hola Mundo',
+//   },
+//   function (resp) {
+//     console.log('respuesta server: ', resp);
+//   }
+// );
 
 // Escuchar información
+// Escuchando mensajes
 socket.on('crearMensaje', function (mensaje) {
   console.log('Servidor:', mensaje);
 });
