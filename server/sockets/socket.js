@@ -27,13 +27,15 @@ io.on('connection', client => {
     callback(usuarios.getPersonasPorSala(data.sala));
   });
 
-  client.on('crearMensaje', data => {
+  client.on('crearMensaje', (data, callback) => {
     const persona = usuarios.getPersona(client.id);
 
     const mensaje = crearMensaje(persona.nombre, data.mensaje);
 
     // Mandar mensajes a todos
     client.broadcast.to(persona.sala).emit('crearMensaje', mensaje);
+
+    callback(mensaje);
   });
 
   client.on('disconnect', () => {

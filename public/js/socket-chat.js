@@ -1,3 +1,4 @@
+// Para probar acceder a http://localhost:3000/
 var socket = io();
 
 var params = new URLSearchParams(window.location.search);
@@ -26,22 +27,11 @@ socket.on('disconnect', function () {
   console.log('Perdimos conexión con el servidor');
 });
 
-// Enviar información
-// socket.emit(
-//   'crearMensaje',
-//   {
-//     nombre: 'José Manuel',
-//     mensaje: 'Hola Mundo',
-//   },
-//   function (resp) {
-//     console.log('respuesta server: ', resp);
-//   }
-// );
-
 // Escuchar información
 // Escuchando mensajes
 socket.on('crearMensaje', function (mensaje) {
-  console.log('Servidor:', mensaje);
+  //console.log('Servidor:', mensaje);
+  renderizarMensajes(mensaje);
 });
 
 // Escuchar cambios de usuarios
