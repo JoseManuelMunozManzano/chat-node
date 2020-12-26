@@ -18,7 +18,8 @@ socket.on('connect', function () {
 
   // Diciéndole al back-end quien soy yo
   socket.emit('entrarChat', usuario, function (resp) {
-    renderizarUsuarios(resp);
+    renderizarUsuarios(resp, false);
+    scrollBottom();
   });
 });
 

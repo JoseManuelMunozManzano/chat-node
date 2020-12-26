@@ -24,6 +24,13 @@ io.on('connection', client => {
       .to(data.sala)
       .emit('listaPersonas', usuarios.getPersonasPorSala(data.sala));
 
+    client.broadcast
+      .to(data.sala)
+      .emit(
+        'crearMensaje',
+        crearMensaje('Administrador', `${data.nombre} se unió`)
+      );
+
     callback(usuarios.getPersonasPorSala(data.sala));
   });
 
